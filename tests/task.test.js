@@ -55,6 +55,28 @@ test ('Should return all tasks for a user', async () => {
     expect(response.body.length).toEqual(2)
 })
 
+test('Should fetch user task by id', async () => {
+    const response = await request(app)
+    .patch(`/tasks/${taskOne._id}`)
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .send()
+    .expect(200)
+    // const task = await Task.findById(taskOne._id)
+    // expect(task).toMatchObject(response.body)    
+})
+
+test ('Should not update other users tasks', async () => {
+    const response = await request(app)
+        .patch(`/tasks/${taskThree._id}`)
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .send({
+            completed: true
+        })
+        .expect(404)
+    const task = await Task.findById(taskThree._id)
+    expect(task.completed).toEqual(false)
+})
+
 test('Should be able to delete user task', async () => {
     const response = await request(app)
         .delete(`/tasks/${taskOne._id}`)
