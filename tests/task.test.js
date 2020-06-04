@@ -52,8 +52,43 @@ test ('Should return all tasks for a user', async () => {
         .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
         .send()
         .expect(200)
-    expect(response.body.length).toEqual(2)
+    expect(response.body.length).toEqual(5)
 })
+
+test ('Should fetch only completed tasks', async () => {
+    const response = await request(app)
+        .get('/tasks?completed=true')
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .send()
+        .expect(200)
+    expect(response.body.length).toEqual(1)
+    expect(response.body[0].completed).toEqual(true)
+})
+
+test ('Should fetch only incomplete tasks', async () => {
+    const response = await request(app)
+        .get('/tasks?completed=false')
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .send()
+        .expect(200)
+    expect(response.body.length).toEqual(4)
+    expect(response.body[0].completed).toEqual(false)
+})
+
+// test ('Should return tasks sorted by description', async () => {
+// })
+
+// test ('Should return tasks sorted by completed', async () => {
+// })
+
+// test ('Should return tasks sorted by createdAt', async () => {
+// })
+
+// test ('Should return tasks sorted by updatedAt', async () => {
+// })
+
+// test ('Should fetch a page of tasks', async () => {
+// })
 
 test('Should fetch user task by id', async () => {
     const response = await request(app)
@@ -66,6 +101,24 @@ test('Should fetch user task by id', async () => {
     expect(task.completed).toEqual(response.body.completed)   
 })
 
+test('Should not fetch user task by id if unathenticated', async () => {
+    const response = await request(app)
+    .get(`/tasks/${taskOne._id}`)
+    .send()
+    .expect(401)
+})
+
+test('Should not fetch other users task by id', async () => {
+    const response = await request(app)
+    .get(`/tasks/${taskThree._id}`)
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .send()
+    .expect(404)  
+})
+
+// test ('Should update users task by id', async () => {
+// })
+
 test ('Should not update other users tasks', async () => {
     const response = await request(app)
         .patch(`/tasks/${taskThree._id}`)
@@ -77,6 +130,8 @@ test ('Should not update other users tasks', async () => {
     const task = await Task.findById(taskThree._id)
     expect(task.completed).toEqual(false)
 })
+
+
 
 test('Should be able to delete user task', async () => {
     const response = await request(app)

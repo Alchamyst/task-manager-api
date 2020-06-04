@@ -46,6 +46,27 @@ const taskThree = {
     owner: userTwo._id
 }
 
+const taskFour = {
+    _id: new mongoose.Types.ObjectId(),
+    description: 'Fourth task',
+    completed: false,
+    owner: userOne._id
+}
+
+const taskFive = {
+    _id: new mongoose.Types.ObjectId(),
+    description: 'Fifth task',
+    completed: false,
+    owner: userOne._id
+}
+
+const taskSix = {
+    _id: new mongoose.Types.ObjectId(),
+    description: 'Sixth task',
+    completed: false,
+    owner: userOne._id
+}
+
 const setupDatabase = async () => {
     await User.deleteMany()
     await Task.deleteMany()
@@ -54,6 +75,9 @@ const setupDatabase = async () => {
     await new Task(taskOne).save()
     await new Task(taskTwo).save()
     await new Task(taskThree).save()
+    await new Task(taskFour).save()
+    await new Task(taskFive).save()
+    await new Task(taskSix).save()
 }
 
 module.exports = {
@@ -63,5 +87,8 @@ module.exports = {
     taskOne,
     taskTwo,
     taskThree,
+    taskFour,
+    taskFive,
+    taskSix,
     setupDatabase
 }
