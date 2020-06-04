@@ -57,12 +57,13 @@ test ('Should return all tasks for a user', async () => {
 
 test('Should fetch user task by id', async () => {
     const response = await request(app)
-    .patch(`/tasks/${taskOne._id}`)
+    .get(`/tasks/${taskOne._id}`)
     .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
     .send()
     .expect(200)
-    // const task = await Task.findById(taskOne._id)
-    // expect(task).toMatchObject(response.body)    
+    const task = await Task.findById(taskOne._id)
+    expect(task.description).toEqual(response.body.description)
+    expect(task.completed).toEqual(response.body.completed)   
 })
 
 test ('Should not update other users tasks', async () => {
