@@ -75,8 +75,15 @@ test ('Should fetch only incomplete tasks', async () => {
     expect(response.body[0].completed).toEqual(false)
 })
 
-// test ('Should return tasks sorted by description', async () => {
-// })
+test ('Should return tasks sorted by description', async () => {
+    const response = await request(app)
+        .get('/tasks?sortBy=description:asc')
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .send()
+        .expect(200)
+    const sortedTasks = await Task.find({owner: userOne._id}).sort('description')
+    expect(JSON.stringify(response.body)).toMatch(JSON.stringify(sortedTasks))
+})
 
 // test ('Should return tasks sorted by completed', async () => {
 // })
@@ -97,8 +104,7 @@ test('Should fetch user task by id', async () => {
     .send()
     .expect(200)
     const task = await Task.findById(taskOne._id)
-    expect(task.description).toEqual(response.body.description)
-    expect(task.completed).toEqual(response.body.completed)   
+    expect(JSON.stringify(task)).toMatch(JSON.stringify(response.body))
 })
 
 test('Should not fetch user task by id if unathenticated', async () => {
