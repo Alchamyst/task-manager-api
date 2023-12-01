@@ -1,30 +1,38 @@
 version: '3.8'
 services:
 
-  backend-mongodb:
+  mongodb:
     container_name: taskmanager-mongodb
     restart: always
     build: 
       context: .
       dockerfile: ./docker/mongodb/Dockerfile
+    environment:
+      - ENV MONGO_INITDB_ROOT_USERNAME=admin
+      - ENV MONGO_INITDB_ROOT_PASSWORD=adminPassword
+      - ENV MONGO_INITDB_DATABASE=task-manager-api
+    ports: # enabled for testing, to be removed with proxy handling requests.
+      - 27017:27017
 
-  # backend-api:
-  #   container_name: taskmanager-api-server
-  #   restart: always
-  #   build: 
-  #     context: .
-  #     dockerfile: ./docker/api-server/Dockerfile
-  #   environment:
-  #     - NODE_ENV=production
-  #   #   - GEOCODE_API_KEY=PUT-API-KEY-HERE
-  #   #   - WEATHER_API_KEY=PUT-API-KEY-HERE
+  tasks-api:
+    container_name: taskmanager-api
+    restart: always
+    build: 
+      context: .
+      dockerfile: ./docker/taskmanager-api/Dockerfile
+    environment:
+      - NODE_ENV=production
+      # - PORT=3000
+      # - SENDGRID_API_KEY=put-your-api-key-here
+      # - JWT_SECRET=aComplicatedPassphraseHere
+      # - MONGODB_URL=mongodb://myuser:mypassword@taskmanager-mongodb:27017/task-manager-api
 
-  #   # env_file for API keys
-  #   env_file:
-  #     - .env
+    # env_file for API keys
+    env_file:
+      - config/dev.env
 
   nginx-proxy:
-    container_name: raskmanager-proxy
+    container_name: taskmanager-proxy
     restart: always
     build: 
       context: .
