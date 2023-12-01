@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+
+  backend-mongodb:
+    container_name: taskmanager-mongodb
+    restart: always
+    build: 
+      context: .
+      dockerfile: ./docker/mongodb/Dockerfile
+
+  # backend-api:
+  #   container_name: taskmanager-api-server
+  #   restart: always
+  #   build: 
+  #     context: .
+  #     dockerfile: ./docker/api-server/Dockerfile
+  #   environment:
+  #     - NODE_ENV=production
+  #   #   - GEOCODE_API_KEY=PUT-API-KEY-HERE
+  #   #   - WEATHER_API_KEY=PUT-API-KEY-HERE
+
+  #   # env_file for API keys
+  #   env_file:
+  #     - .env
+
+  nginx-proxy:
+    container_name: raskmanager-proxy
+    restart: always
+    build: 
+      context: .
+      dockerfile: ./docker/proxy/Dockerfile
+    ports:
+      - "8080:8080"

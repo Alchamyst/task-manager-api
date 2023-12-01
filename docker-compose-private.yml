@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+
+  backend:
+    container_name: expensify-backend
+    restart: always
+    build: 
+      context: .
+      dockerfile: ./docker/backend/Dockerfile
+      args:
+            - NODE_ENV=production
+            - FIREBASE_API_KEY=AIzaSyBeajnyasa4KfksW9LmpSOfEUP3-jOpNjI
+            - FIREBASE_AUTH_DOMAIN=expensify-27ce3.firebaseapp.com
+            - FIREBASE_DATABASE_URL=https://expensify-27ce3-default-rtdb.firebaseio.com
+            - FIREBASE_PROJECT_ID=expensify-27ce3
+            - FIREBASE_STORAGE_BUCKET=expensify-27ce3.appspot.com
+            - FIREBASE_MESSAGING_SENDER_ID=520264313756
+            - FIREBASE_APP_ID=1:520264313756:web:3014ca8762e267147a7659
+    environment:
+      - NODE_ENV=production
+
+  nginx-proxy:
+    container_name: expensify-proxy
+    restart: always
+    build: 
+      context: .
+      dockerfile: ./docker/proxy/Dockerfile
+    ports:
+      - "8080:8080"
