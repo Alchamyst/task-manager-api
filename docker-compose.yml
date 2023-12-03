@@ -7,11 +7,11 @@ services:
     build: 
       context: .
       dockerfile: ./docker/mongodb/Dockerfile
-    environment:
-      - ENV MONGO_INITDB_ROOT_USERNAME=admin
-      - ENV MONGO_INITDB_ROOT_PASSWORD=adminPassword
-      - ENV MONGO_INITDB_DATABASE=task-manager-api
-    ports: # enabled for testing, to be removed with proxy handling requests.
+      args:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=adminPassword
+      - MONGO_INITDB_DATABASE=task-manager-api
+    ports: # enabled for accessing the database on @loclhost:27017 for testing purposes. The docker private network is used for communication between the api and db.
       - 27017:27017
 
   tasks-api:
@@ -26,10 +26,10 @@ services:
       # - SENDGRID_API_KEY=put-your-api-key-here
       # - JWT_SECRET=aComplicatedPassphraseHere
       # - MONGODB_URL=mongodb://myuser:mypassword@taskmanager-mongodb:27017/task-manager-api
-
-    # env_file for API keys
-    env_file:
+    env_file: # env_file for API keys, rather than hardcoding above during development.
       - config/dev.env
+    depends_on:
+      - mongodb
 
   nginx-proxy:
     container_name: taskmanager-proxy
