@@ -11,8 +11,8 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=adminPassword
       - MONGO_INITDB_DATABASE=task-manager-api
-    ports: # enabled for accessing the database on @loclhost:27017 for testing purposes. The docker private network is used for communication between the api and db.
-      - 27017:27017
+    ports: # enabled for accessing the database for testing purposes. The docker private network is used for communication between the api and db.
+      - 27017:27017 # full mongodb uri: mongodb://admin:adminPassword@localhost:27017/task-manager-api
 
   tasks-api:
     container_name: taskmanager-api
@@ -25,7 +25,7 @@ services:
       # - PORT=3000
       # - SENDGRID_API_KEY=put-your-api-key-here
       # - JWT_SECRET=aComplicatedPassphraseHere
-      # - MONGODB_URL=mongodb://myuser:mypassword@taskmanager-mongodb:27017/task-manager-api
+      # - MONGODB_URL=mongodb://admin:adminPassword@taskmanager-mongodb:27017/task-manager-api
     env_file: # env_file for API keys, rather than hardcoding above during development.
       - config/dev.env
     depends_on:
