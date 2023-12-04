@@ -1,4 +1,4 @@
 node_modules
 config
 .vscode
-docker-compose-private.yml
+*docker-compose-private.yml
