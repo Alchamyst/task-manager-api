@@ -10,7 +10,8 @@ RUN apk add --no-cache \
     libstdc++ \
     linux-headers \
     make \
-    python3
+    python3 \
+    vips-dev
 
 # Set the Python environment variable for node-gyp
 ENV PYTHON=python3
